@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Battle Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .players {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        
+        .player {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 20px auto;
+        }
+        
+        .dice {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+            transition: transform 0.3s;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+        
+        #result {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 30px;
+            min-height: 40px;
+        }
+        
+        .win {
+            color: green;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+        
+        .lose {
+            color: red;
+        }
+        
+        .draw {
+            color: blue;
+        }
+        
+        @keyframes roll {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .rolling {
+            animation: roll 0.5s linear;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Dice Battle Game</h1>
+        <p>Click the button to roll the dice. Highest number wins!</p>
+        
+        <div class="players">
+            <div class="player">Player 1</div>
+            <div class="player">Player 2</div>
+        </div>
+        
+        <div class="dice-container">
+            <div class="dice" id="dice1">?</div>
+            <div class="dice" id="dice2">?</div>
+        </div>
+        
+        <button id="rollButton">Roll Dice</button>
+        
+        <div id="result">Click the button to play!</div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dice1 = document.getElementById('dice1');
+            const dice2 = document.getElementById('dice2');
+            const rollButton = document.getElementById('rollButton');
+            const resultDisplay = document.getElementById('result');
+            
+            // Dice faces (Unicode characters for dice)
+            const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            
+            // Roll both dice
+            function rollDice() {
+                // Clear any previous result
+                resultDisplay.textContent = '';
+                resultDisplay.className = '';
+                
+                // Show question marks while rolling
+                dice1.textContent = '?';
+                dice2.textContent = '?';
+                
+                // Add rolling animation
+                dice1.classList.add('rolling');
+                dice2.classList.add('rolling');
+                
+                // Disable button during animation
+                rollButton.disabled = true;
+                
+                // After animation completes, show new dice values
+                setTimeout(() => {
+                    // Remove animation
+                    dice1.classList.remove('rolling');
+                    dice2.classList.remove('rolling');
+                    
+                    // Generate random values (1-6)
+                    const dice1Value = Math.floor(Math.random() * 6) + 1;
+                    const dice2Value = Math.floor(Math.random() * 6) + 1;
+                    
+                    // Update dice display
+                    dice1.textContent = diceFaces[dice1Value - 1];
+                    dice2.textContent = diceFaces[dice2Value - 1];
+                    
+                    // Determine winner
+                    if (dice1Value > dice2Value) {
+                        resultDisplay.textContent = "Player 1 wins!";
+                        resultDisplay.className = "win";
+                    } else if (dice2Value > dice1Value) {
+                        resultDisplay.textContent = "Player 2 wins!";
+                        resultDisplay.className = "lose";
+                    } else {
+                        resultDisplay.textContent = "It's a draw!";
+                        resultDisplay.className = "draw";
+                    }
+                    
+                    // Re-enable button
+                    rollButton.disabled = false;
+                }, 500);
+            }
+            
+            // Event listener for the roll button
+            rollButton.addEventListener('click', rollDice);
+        });
+    </script>
+</body>
+</html>
